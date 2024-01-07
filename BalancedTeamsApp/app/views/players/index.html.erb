@@ -1,0 +1,12 @@
+<!-- app/views/players/index.html.erb -->
+
+<h1>Listagem de Jogadores</h1>
+
+<% unless @players_displayed %>
+  <ul>
+    <% @players.each do |player| %>
+      <li><%= player.name %> - <%= player.score %></li>
+    <% end %>
+  </ul>
+  <% @players_displayed = false %>
+<% end %>

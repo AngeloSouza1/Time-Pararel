@@ -1,0 +1,16 @@
+<!-- app/views/teams/balanced_teams.html.erb -->
+
+<h1>Times Formados</h1>
+
+<h2>Time A:  (<%= number_to_percentage(team_percentage(@balanced_teams[0]), precision: 0)%>)</h2>
+<% @balanced_teams[0].each do |player| %>
+  <p><%= player.name %> - <%= player.score %></p>
+<% end %>
+
+
+
+<h2>Time B:  (<%= number_to_percentage(team_percentage(@balanced_teams[1]), precision: 0)%>)</h2>
+<% @balanced_teams[1].each do |player| %>
+  <p><%= player.name %> - <%= player.score %></p>
+<% end %>
+
