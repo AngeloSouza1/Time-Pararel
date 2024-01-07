@@ -16,24 +16,12 @@
     font-size: 1.2rem;
   }
 
-  .table tbody tr:nth-child(even) {
-    background-color: #ffcccc; /* Vermelho claro */
+  .table input[type="checkbox"] {
+    transform: scale(1.5); /* Ajuste o valor conforme necessário para aumentar ou diminuir o tamanho */
   }
 
-  .table tbody tr:nth-child(odd) {
-    background-color: #ffffff; /* Branco */
-  }
-
-  .table tr td:first-child,
-  .table tr th:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
-
-  .table tr td:last-child,
-  .table tr th:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+  #form-teams-btn {
+    width: 100%;
   }
 </style>
 
@@ -42,10 +30,12 @@
 
   <%= form_tag form_teams_players_path, method: :post do %>
     <div class="mb-3">
-      <button type="submit" class="btn btn-primary mx-auto" id="form-teams-btn" disabled>Formar Times</button>
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-lg btn-primary" id="form-teams-btn" disabled>Formar Times</button>
+      </div>
     </div>
     <div class="table-responsive">
-      <table class="table table-bordered text-center">
+      <table class="table table-bordered text-center table-striped">
         <thead>
           <tr>
             <th>Jogador</th>
@@ -55,7 +45,7 @@
         </thead>
         <tbody>
           <% @players.each do |player| %>
-            <tr>
+            <tr class="table-row">
               <td><%= "#{player.name}" %></td>
               <td><%= "#{player.score}" %></td>
               <td><%= check_box_tag 'player_ids[]', player.id %></td>
@@ -82,6 +72,9 @@
         } else {
           this.checked = false;
         }
+
+        // Adiciona ou remove a classe 'selected' com base no estado do checkbox
+        this.closest('.table-row').classList.toggle('selected', this.checked);
       });
     });
 

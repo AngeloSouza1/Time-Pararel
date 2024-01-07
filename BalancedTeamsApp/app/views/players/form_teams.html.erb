@@ -18,12 +18,11 @@
 
   <h2>Time A: <%= number_to_percentage(team_percentage(@balanced_teams[0]), precision: 0) %></h2>
   <div class="table-responsive">
-    <table class="table table-bordered text-center">
+    <table class="table table-bordered table-striped text-center">
       <tbody>
         <% @balanced_teams[0].each do |player| %>
           <tr>
             <td><%= "#{player.name}" %></td>
-            <td><%= "#{player.score}" %></td>
           </tr>
         <% end %>
       </tbody>
@@ -32,17 +31,16 @@
 
   <h2>Time B: <%= number_to_percentage(team_percentage(@balanced_teams[1]), precision: 0) %></h2>
   <div class="table-responsive">
-    <table class="table table-bordered text-center">
+    <table class="table table-bordered table-striped text-center">
       <tbody>
         <% @balanced_teams[1].each do |player| %>
           <tr>
             <td><%= "#{player.name}" %></td>
-            <td><%= "#{player.score}" %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
 
-  <%= link_to 'Voltar', :back, class: 'btn btn-primary mt-3' %>
+  <%= link_to 'Voltar', :back, class: 'btn btn-secondary mt-3' %>
 </div>
