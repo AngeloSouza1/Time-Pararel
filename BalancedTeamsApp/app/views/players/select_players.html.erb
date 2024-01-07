@@ -1,13 +1,71 @@
-<h1>Selecione Jogadores</h1>
-<%= form_tag form_teams_players_path, method: :post do %>
-  <% @players.each do |player| %>
-    <label>
-      <%= check_box_tag 'player_ids[]', player.id %>
-      <%= player.name %> - <%= player.score %>
-    </label><br>
+<style>
+  body {
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1, h2 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+
+  .table td, .table th {
+    font-size: 1.2rem;
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #ffcccc; /* Vermelho claro */
+  }
+
+  .table tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Branco */
+  }
+
+  .table tr td:first-child,
+  .table tr th:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  .table tr td:last-child,
+  .table tr th:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+</style>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Selecionar Jogadores</h1>
+
+  <%= form_tag form_teams_players_path, method: :post do %>
+    <div class="mb-3">
+      <button type="submit" class="btn btn-primary mx-auto" id="form-teams-btn" disabled>Formar Times</button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th>Jogador</th>
+            <th>Score</th>
+            <th>Selecionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @players.each do |player| %>
+            <tr>
+              <td><%= "#{player.name}" %></td>
+              <td><%= "#{player.score}" %></td>
+              <td><%= check_box_tag 'player_ids[]', player.id %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
-  <%= submit_tag 'Formar Times', id: 'form-teams-btn', disabled: true %>
-<% end %>
+</div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -25,6 +83,15 @@
           this.checked = false;
         }
       });
+    });
+
+    // Adiciona evento de clique ao botão para verificar novamente antes do envio do formulário
+    formTeamsBtn.addEventListener('click', function() {
+      var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      if (selectedPlayers < 12) {
+        alert('Selecione pelo menos 12 jogadores para formar times.');
+        return false; // Impede o envio do formulário
+      }
     });
   });
 </script>

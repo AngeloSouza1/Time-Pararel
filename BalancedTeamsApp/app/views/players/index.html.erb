@@ -1,12 +1,16 @@
-<!-- app/views/players/index.html.erb -->
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Listagem de Jogadores</h1>
 
-<h1>Listagem de Jogadores</h1>
+  <% unless @players_displayed %>
+    <div class="list-group mx-auto text-center">
+      <% @players.each do |player| %>
+        <div class="list-group-item"><%= "#{player.name} - #{player.score}" %></div>
+      <% end %>
+    </div>
+    <% @players_displayed = true %>
+  <% end %>
 
-<% unless @players_displayed %>
-  <ul>
-    <% @players.each do |player| %>
-      <li><%= player.name %> - <%= player.score %></li>
-    <% end %>
-  </ul>
-  <% @players_displayed = false %>
-<% end %>
+  <div class="text-center mt-3">
+    <%= link_to 'Voltar', :back, class: 'btn btn-primary' %>
+  </div>
+</div>
