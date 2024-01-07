@@ -1,0 +1,99 @@
+<style>
+  body {
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1, h2 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+
+  .table td, .table th {
+    font-size: 1.2rem;
+  }
+
+  .table input[type="checkbox"] {
+    transform: scale(1.5); 
+  }
+
+  #form-teams-btn {
+    width: 100%;
+  }
+</style>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Futebol - Quarta</h1>
+
+
+  <p>Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</p>
+  <p>Selecione pelo menos 12 jogadores para formar times.</p>
+  <p><strong><span id="confirmed-players-count">0</span></strong> jogador(es) confirmado(s).</p>
+
+  <%= form_tag form_teams_players_path, method: :post do %>
+    <div class="mb-3">
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-lg btn-primary" id="form-teams-btn" disabled>Formar Times</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th>Jogador</th>
+            <th>Score</th>
+            <th>Selecionar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @players.each do |player| %>
+            <tr class="table-row">
+              <td><%= "#{player.name}" %></td>
+              <td><%= "#{player.score}" %></td>
+              <td><%= check_box_tag 'player_ids[]', player.id %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var maxPlayers = 12;
+    var formTeamsBtn = document.getElementById('form-teams-btn');
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var confirmedPlayersCountElement = document.getElementById('confirmed-players-count');
+
+    checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
+
+        // Atualizar a contagem de jogadores confirmados
+        confirmedPlayersCountElement.innerText = selectedPlayers;
+
+        if (selectedPlayers <= maxPlayers) {
+          formTeamsBtn.disabled = selectedPlayers < 12;
+        } else {
+          this.checked = false;
+        }
+
+        // Adiciona ou remove a classe 'selected' com base no estado do checkbox
+        this.closest('.table-row').classList.toggle('selected', this.checked);
+      });
+    });
+
+    // Adiciona evento de clique ao botão para verificar novamente antes do envio do formulário
+    formTeamsBtn.addEventListener('click', function() {
+      var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      if (selectedPlayers < 12) {
+        alert('Selecione pelo menos 12 jogadores para formar times.');
+        return false; // Impede o envio do formulário
+      }
+    });
+  });
+</script>
