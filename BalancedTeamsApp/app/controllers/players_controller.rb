@@ -1,31 +1,32 @@
 class PlayersController < ApplicationController
   before_action :initialize_players, only: [:index, :select_players]
 
-
-
   def index
-  
+    # Apresenta a lista de jogadores na view
   end
   
   def form_teams
     selected_players = params[:player_ids].map { |id| Player.find(id) }
     @balanced_teams = balance_teams(selected_players)
- 
   end
   
   private
 
   def balance_teams(players)
-    players.sort_by!(&:score).reverse!
+    sorted_players = players.sort_by(&:score).reverse
 
     team_a = []
     team_b = []
+    team_a_score = 0
+    team_b_score = 0
 
-    players.each_with_index do |player, index|
-      if index.even?
+    sorted_players.each do |player|
+      if team_a_score <= team_b_score
         team_a << player
+        team_a_score += player.score
       else
         team_b << player
+        team_b_score += player.score
       end
     end
 
