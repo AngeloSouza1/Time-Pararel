@@ -2,6 +2,7 @@
   body {
     text-align: center;
     padding: 20px;
+    background-color: #f8f9fa;
   }
 
   h1, h2 {
@@ -23,14 +24,31 @@
   #form-teams-btn {
     width: 100%;
   }
+
+  .selected {
+    background-color: #c3e6cb !important;
+  }
+
+  .table th {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .table {
+    background-color: white;
+  }
+
+  #confirmed-players-count {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
 </style>
 
 <div class="container mt-5">
   <h1 class="mb-4">Futebol - Quarta</h1>
 
-
   <p>Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</p>
-  <p>Selecione pelo menos 12 jogadores para formar times.</p>
+  <p>Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</p>
   <p><strong><span id="confirmed-players-count">0</span></strong> jogador(es) confirmado(s).</p>
 
   <%= form_tag form_teams_players_path, method: :post do %>
@@ -51,8 +69,8 @@
         <tbody>
           <% @players.each do |player| %>
             <tr class="table-row">
-              <td><%= "#{player.name}" %></td>
-              <td><%= "#{player.score}" %></td>
+              <td><%= player.name %></td>
+              <td><%= player.score %></td>
               <td><%= check_box_tag 'player_ids[]', player.id %></td>
             </tr>
           <% end %>
@@ -76,11 +94,8 @@
         // Atualizar a contagem de jogadores confirmados
         confirmedPlayersCountElement.innerText = selectedPlayers;
 
-        if (selectedPlayers <= maxPlayers) {
-          formTeamsBtn.disabled = selectedPlayers < 12;
-        } else {
-          this.checked = false;
-        }
+        // Controla o estado do botão de formar times
+        formTeamsBtn.disabled = selectedPlayers < maxPlayers;
 
         // Adiciona ou remove a classe 'selected' com base no estado do checkbox
         this.closest('.table-row').classList.toggle('selected', this.checked);
@@ -90,7 +105,7 @@
     // Adiciona evento de clique ao botão para verificar novamente antes do envio do formulário
     formTeamsBtn.addEventListener('click', function() {
       var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
-      if (selectedPlayers < 12) {
+      if (selectedPlayers < maxPlayers) {
         alert('Selecione pelo menos 12 jogadores para formar times.');
         return false; // Impede o envio do formulário
       }
