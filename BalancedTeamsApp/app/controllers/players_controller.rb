@@ -13,13 +13,17 @@ class PlayersController < ApplicationController
   private
 
   def balance_teams(players)
-    sorted_players = players.sort_by(&:score).reverse
-
+    # Embaralha a lista de jogadores
+    shuffled_players = players.shuffle
+  
+    # Ordena os jogadores por pontuação decrescente para balanceamento
+    sorted_players = shuffled_players.sort_by(&:score).reverse
+  
     team_a = []
     team_b = []
     team_a_score = 0
     team_b_score = 0
-
+  
     sorted_players.each do |player|
       if team_a_score <= team_b_score
         team_a << player
@@ -29,9 +33,11 @@ class PlayersController < ApplicationController
         team_b_score += player.score
       end
     end
-
-    [team_a, team_b]
+  
+    # Embaralha os jogadores dentro de cada time para garantir mais aleatoriedade
+    [team_a.shuffle, team_b.shuffle]
   end
+  
 
   def initialize_players
     # Limpa a lista de jogadores

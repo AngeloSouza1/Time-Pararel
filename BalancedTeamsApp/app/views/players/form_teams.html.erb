@@ -53,9 +53,9 @@
   <div class="table-responsive">
     <table class="table table-bordered table-striped text-center">
       <tbody>
-        <% @balanced_teams[0].each do |player| %>
+        <% @balanced_teams[0].sort_by(&:name).each do |player| %>
           <tr>
-            <td><%= player.name %></td>
+            <td><%= "#{player.name} (#{player.score})" %></td>
           </tr>
         <% end %>
       </tbody>
@@ -66,9 +66,9 @@
   <div class="table-responsive">
     <table class="table table-bordered table-striped text-center">
       <tbody>
-        <% @balanced_teams[1].each do |player| %>
+        <% @balanced_teams[1].sort_by(&:name).each do |player| %>
           <tr>
-            <td><%= player.name %></td>
+            <td><%= "#{player.name} (#{player.score})" %></td>
           </tr>
         <% end %>
       </tbody>
