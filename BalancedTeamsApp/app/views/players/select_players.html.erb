@@ -91,6 +91,12 @@
       checkbox.addEventListener('change', function() {
         var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
 
+        // Se o número de jogadores selecionados for maior que 12, desmarcar a seleção atual
+        if (selectedPlayers > maxPlayers) {
+          this.checked = false;
+          return;
+        }
+
         // Atualizar a contagem de jogadores confirmados
         confirmedPlayersCountElement.innerText = selectedPlayers;
 
