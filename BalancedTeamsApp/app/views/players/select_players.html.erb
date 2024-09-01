@@ -1,52 +1,169 @@
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
   body {
     text-align: center;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
   }
 
-  h1, h2 {
-    margin-bottom: 10px;
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
   }
 
-  p {
-    margin: 5px 0;
+  .table-container {
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+    border-radius: 12px;
+    background-color: #1f1f1f;
+    padding: 15px;
+    transition: box-shadow 0.3s ease;
   }
 
-  .table td, .table th {
+  .table-container:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+  }
+
+  .table {
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 1.1rem;
+    table-layout: fixed; /* Mantém as colunas com largura fixa */
+  }
+
+  .table th, .table td {
+    padding: 20px;
+    text-align: center;
     font-size: 1.2rem;
+    border-bottom: 1px solid #cccccc;
+    color: #000000; /* Fonte preta para os itens da tabela */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .table th {
+    background-color: #007bff;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    text-shadow: 0 0 5px #007bff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .table tbody tr {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+  }
+
+  .table tbody tr:nth-child(odd) {
+    background-color: #e0e0e0;
+  }
+
+  .table tbody tr:hover {
+    background-color: #007bff;
+    color: #ffffff;
+    transform: translateX(10px);
+    cursor: pointer;
+  }
+
+  .table tbody tr:hover td.player-name {
+    color: #ffeb3b;
+  }
+
+  .table tbody tr:hover td.player-score {
+    color: #ffeb3b;
+  }
+
+  .table td.player-name {
+    font-weight: bold;
+    font-size: 1.3rem;
+    transition: color 0.3s ease;
+  }
+
+  .table td.player-score {
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
   }
 
   .table input[type="checkbox"] {
-    transform: scale(1.5); 
+    transform: scale(1.5);
+    cursor: pointer;
+    accent-color: #007bff;
+    border: 2px solid #007bff;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    transition: transform 0.2s ease;
+  }
+
+  .table input[type="checkbox"]:hover {
+    transform: scale(1.8);
   }
 
   .table input[type="datetime-local"] {
     font-size: 1rem;
     padding: 5px;
     margin-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    background-color: #f5f5f5;
+    color: #000000;
+    width: 90%;
   }
 
   #form-teams-btn {
     width: 100%;
+    font-size: 1.5rem;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #00ff00;
+    color: #121212;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+
+  #form-teams-btn:disabled {
+    background-color: #3b3b3b;
+    color: #999999;
+    cursor: not-allowed;
+    text-shadow: none;
+  }
+
+  #form-teams-btn:not(:disabled):hover {
+    background-color: #00cc00;
+    color: #f5f5f5;
   }
 
   .selected {
-    background-color: #c3e6cb !important;
-  }
-
-  .table th {
-    background-color: #007bff;
-    color: white;
-  }
-
-  .table {
-    background-color: white;
+    background-color: #007bff !important;
+    color: #ffffff !important;
   }
 
   #confirmed-players-count {
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 2rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
   }
 
   .hidden {
@@ -67,7 +184,7 @@
         <button type="submit" class="btn btn-lg btn-primary" id="form-teams-btn" disabled>Formar Times</button>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-container">
       <table class="table table-bordered text-center">
         <thead>
           <tr>
@@ -80,8 +197,8 @@
         <tbody>
           <% @players.each do |player| %>
             <tr class="table-row">
-              <td><%= player.name %></td>
-              <td><%= player.score %></td>
+              <td class="player-name"><%= player.name %></td>
+              <td class="player-score"><%= player.score %></td>
               <td><%= check_box_tag 'player_ids[]', player.id %></td>
               <td>
                 <%= datetime_field_tag "player_times[#{player.id}]", Time.now, class: 'hidden', disabled: true %>
@@ -142,6 +259,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-
-
 </script>
