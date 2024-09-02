@@ -21,6 +21,12 @@
     transform: scale(1.5); 
   }
 
+  .table input[type="datetime-local"] {
+    font-size: 1rem;
+    padding: 5px;
+    margin-left: 10px;
+  }
+
   #form-teams-btn {
     width: 100%;
   }
@@ -41,6 +47,10 @@
   #confirmed-players-count {
     font-weight: bold;
     font-size: 1.5rem;
+  }
+
+  .hidden {
+    display: none;
   }
 </style>
 
@@ -64,6 +74,7 @@
             <th>Jogador</th>
             <th>Score</th>
             <th>Selecionar</th>
+            <th>Data e Hora</th>
           </tr>
         </thead>
         <tbody>
@@ -72,6 +83,9 @@
               <td><%= player.name %></td>
               <td><%= player.score %></td>
               <td><%= check_box_tag 'player_ids[]', player.id %></td>
+              <td>
+                <%= datetime_field_tag "player_times[#{player.id}]", Time.now, class: 'hidden', disabled: true %>
+              </td>
             </tr>
           <% end %>
         </tbody>
@@ -82,7 +96,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    var maxPlayers = 12;
     var formTeamsBtn = document.getElementById('form-teams-btn');
     var checkboxes = document.querySelectorAll('input[type="checkbox"]');
     var confirmedPlayersCountElement = document.getElementById('confirmed-players-count');
@@ -91,27 +104,32 @@
       checkbox.addEventListener('change', function() {
         var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
 
-        // Se o número de jogadores selecionados for maior que 12, desmarcar a seleção atual
-        if (selectedPlayers > maxPlayers) {
-          this.checked = false;
-          return;
-        }
-
         // Atualizar a contagem de jogadores confirmados
         confirmedPlayersCountElement.innerText = selectedPlayers;
 
-        // Controla o estado do botão de formar times
-        formTeamsBtn.disabled = selectedPlayers < maxPlayers;
+        // Habilitar/desabilitar o botão de formar times
+        formTeamsBtn.disabled = selectedPlayers < 12;
 
         // Adiciona ou remove a classe 'selected' com base no estado do checkbox
-        this.closest('.table-row').classList.toggle('selected', this.checked);
+        var row = this.closest('.table-row');
+        row.classList.toggle('selected', this.checked);
+
+        // Exibe ou oculta o campo de data/hora
+        var datetimeField = row.querySelector('input[type="datetime-local"]');
+        if (this.checked) {
+          datetimeField.classList.remove('hidden'); // Exibe o campo de data/hora
+          datetimeField.value = new Date().toISOString().slice(0, 16); // Define o valor atual
+        } else {
+          datetimeField.classList.add('hidden'); // Oculta o campo de data/hora
+          datetimeField.value = ''; // Limpa o valor ao desmarcar
+        }
       });
     });
 
     // Adiciona evento de clique ao botão para verificar novamente antes do envio do formulário
     formTeamsBtn.addEventListener('click', function() {
       var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
-      if (selectedPlayers < maxPlayers) {
+      if (selectedPlayers < 12) {
         alert('Selecione pelo menos 12 jogadores para formar times.');
         return false; // Impede o envio do formulário
       }

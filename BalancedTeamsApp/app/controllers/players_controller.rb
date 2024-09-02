@@ -4,27 +4,36 @@ class PlayersController < ApplicationController
   def index
     # Apresenta a lista de jogadores na view
   end
-  
+
   def form_teams
-    selected_players = params[:player_ids].map { |id| Player.find(id) }
-    @balanced_teams = balance_teams(selected_players)
+    # Encontra os jogadores selecionados com base nos IDs passados pelo formulário
+    selected_players = Player.find(params[:player_ids])
+
+    # Garante que player_times não seja nil e converte para DateTime, ignorando entradas vazias
+    player_times = (params[:player_times] || {}).transform_values { |v| v.present? ? DateTime.parse(v) : nil }
+
+    # Balanceia os times considerando os 12 jogadores mais recentes
+    @balanced_teams = balance_teams(selected_players, player_times)
   end
-  
+
   private
 
-  def balance_teams(players)
-    # Embaralha a lista de jogadores
-    shuffled_players = players.shuffle
-  
-    # Ordena os jogadores por pontuação decrescente para balanceamento
-    sorted_players = shuffled_players.sort_by(&:score).reverse
-  
+  def balance_teams(players, player_times)
+    # Ordena os jogadores pelo datetime fornecido (mais recente primeiro)
+    sorted_players = players.sort_by { |player| player_times[player.id.to_s] || DateTime.new(0) }.reverse
+
+    # Seleciona os 12 jogadores mais recentes
+    top_players = sorted_players.first(12)
+
+    # Ordena os jogadores selecionados por score (decrescente) para balanceamento
+    top_players_sorted_by_score = top_players.sort_by(&:score).reverse
+
     team_a = []
     team_b = []
     team_a_score = 0
     team_b_score = 0
-  
-    sorted_players.each do |player|
+
+    top_players_sorted_by_score.each do |player|
       if team_a_score <= team_b_score
         team_a << player
         team_a_score += player.score
@@ -33,11 +42,10 @@ class PlayersController < ApplicationController
         team_b_score += player.score
       end
     end
-  
-    # Embaralha os jogadores dentro de cada time para garantir mais aleatoriedade
+
+    # Retorna os times balanceados
     [team_a.shuffle, team_b.shuffle]
   end
-  
 
   def initialize_players
     # Limpa a lista de jogadores
