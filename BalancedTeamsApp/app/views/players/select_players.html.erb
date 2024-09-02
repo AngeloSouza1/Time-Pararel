@@ -1,5 +1,7 @@
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+    
 
   body {
     padding: 20px;
@@ -321,10 +323,14 @@
 </style>
 
 <div class="content-container">
-  <h1 class="mb-4" style="text-align: center;">Futebol - Quarta</h1>
-  <h4 style="text-align: center;">Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</h4>
-  <h4 style="text-align: center;">Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</h4>
-  <h4 style="text-align: center;"><strong><span id="confirmed-players-count">0</span></strong>  jogador(es) confirmado(s).</h4>
+
+<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+  <img src="<%= asset_path('img2.png') %>" alt="Logotipo de Futebol" style="height: 100px; margin-right: 10px;">
+  <h1 style="margin: 0;">Futebol - Quarta</h1>
+</div>
+<h5 style="text-align: center;">Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</h5>
+<h5 style="text-align: center;">Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</h5>
+<h5 style="text-align: center;"><strong><span id="confirmed-players-count">0</span></strong> jogador(es) confirmado(s).</h5>
 
 
 <%= form_tag form_teams_players_path, method: :post do %>
