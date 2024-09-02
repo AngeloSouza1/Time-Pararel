@@ -1,7 +1,5 @@
-
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-    
 
   body {
     padding: 20px;
@@ -20,15 +18,15 @@
 
   .image-container {
     width: 100%;
-    max-width: 1380px; /* Aumenta a largura máxima do app em 15% */
+    max-width: 1380px; 
     margin: 0 auto;
   }
 
   .image-container img {
     width: 100%;
-    height: auto; /* Mantém a proporção */
-    max-height: 300px; /* Limita a altura da imagem */
-    object-fit: cover; /* Cobre a área da imagem sem deformação */
+    height: auto; 
+    max-height: 300px; 
+    object-fit: cover; 
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
     transition: transform 0.3s ease;
@@ -45,7 +43,7 @@
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
     transition: box-shadow 0.3s ease;
-    max-width: 1380px; /* Aumenta a largura máxima do app em 15% */
+    max-width: 1380px; 
     margin: 0 auto;
   }
 
@@ -92,9 +90,6 @@
     text-align: center;
     font-size: 1.2rem;
     color: #000000;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
     transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
     border: none;
   }
@@ -151,14 +146,26 @@
     transition: color 0.3s ease, font-size 0.3s ease;
   }
 
-  .table td.player-score {
-    font-weight: bold;
-    font-size: 1.2rem;
+  .table td.datetime-field {
+    font-size: 1.1rem;
     transition: color 0.3s ease;
+    color: #000000;
+    text-align: center;
   }
 
   .table tbody tr.selected .player-name {
     font-size: 1.5rem;
+  }
+
+  .table .datetime-display {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #000000;
+    background-color: transparent; /* Sem fundo por padrão */
+    display: inline-block;
+    width: 100%; /* Garante que a data e hora ocupem toda a largura da coluna */
+    text-align: center; /* Centraliza o texto dentro da coluna */
   }
 
   .table input[type="checkbox"] {
@@ -189,23 +196,6 @@
 
   .table input[type="checkbox"]:hover {
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-  }
-
-  .table input[type="datetime-local"] {
-    font-size: 1.3rem;
-    padding: 5px;
-    margin-left: 10px;
-    border-radius: 5px;
-    border: 1px solid #007bff;
-    background-color: #f5f5f5;
-    color: #000000;
-    width: 90%;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .table input[type="datetime-local"]:focus {
-    border-color: #0056b3;
-    box-shadow: 0 0 10px rgba(0, 86, 179, 0.5);
   }
 
   #form-teams-btn {
@@ -283,7 +273,7 @@
       height: 20px;
     }
 
-    .table td.player-name, .table td.player-score {
+    .table td.player-name, .table td.datetime-field {
       font-size: 1.1rem;
     }
 
@@ -308,7 +298,7 @@
       height: 18px;
     }
 
-    .table td.player-name, .table td.player-score {
+    .table td.player-name, .table td.datetime-field {
       font-size: 1rem;
     }
 
@@ -317,23 +307,19 @@
       padding: 8px;
     }
   }
-
-
-  
 </style>
 
 <div class="content-container">
+  <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+    <img src="<%= asset_path('img2.png') %>" alt="Logotipo de Futebol" style="height: 100px; margin-right: 10px;">
+    <h1 style="margin: 0;">Futebol - Quarta</h1>
+  </div>
 
-<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-  <img src="<%= asset_path('img2.png') %>" alt="Logotipo de Futebol" style="height: 100px; margin-right: 10px;">
-  <h1 style="margin: 0;">Futebol - Quarta</h1>
-</div>
-<h5 style="text-align: center;">Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</h5>
-<h5 style="text-align: center;">Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</h5>
-<h5 style="text-align: center;"><strong><span id="confirmed-players-count">0</span></strong> jogador(es) confirmado(s).</h5>
+  <h5 style="text-align: center;">Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</h5>
+  <h5 style="text-align: center;">Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</h5>
+  <h5 style="text-align: center;"><strong><span id="confirmed-players-count">0</span></strong> jogador(es) confirmado(s).</h5>
 
-
-<%= form_tag form_teams_players_path, method: :post do %>
+  <%= form_tag form_teams_players_path, method: :post do %>
     <div class="mb-3">
       <div class="d-grid gap-2">
         <button type="submit" class="btn btn-lg btn-primary" id="form-teams-btn" disabled>Formar Times</button>
@@ -344,18 +330,18 @@
         <thead>
           <tr>
             <th>Jogador</th>
-            <th>Selecionar</th>
             <th>Data e Hora</th>
+            <th>Selecionar</th>
           </tr>
         </thead>
         <tbody>
           <% @players.each do |player| %>
             <tr class="table-row">
               <td class="player-name"><%= player.name %></td>
-              <td><%= check_box_tag 'player_ids[]', player.id %></td>
-              <td>
-                <%= datetime_field_tag "player_times[#{player.id}]", Time.now, class: 'hidden', disabled: true %>
+              <td class="datetime-field">
+                <span id="datetime-label-<%= player.id %>" class="datetime-display">Vai jogar?</span>
               </td>
+              <td><%= check_box_tag 'player_ids[]', player.id %></td>
             </tr>
           <% end %>
         </tbody>
@@ -370,10 +356,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var checkboxes = document.querySelectorAll('input[type="checkbox"]');
   var confirmedPlayersCountElement = document.getElementById('confirmed-players-count');
 
-  function formatDateToLocalISO(date) {
-    var offset = date.getTimezoneOffset() * 60000;
-    var localISOTime = new Date(date - offset).toISOString().slice(0, 19);
-    return localISOTime;
+  function formatDateToLocal(date) {
+    var day = String(date.getDate()).padStart(2, '0');
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var year = date.getFullYear();
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
+    var seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
   }
 
   function updateFormState() {
@@ -386,16 +376,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var row = checkbox.closest('.table-row');
     row.classList.toggle('selected', checkbox.checked);
 
-    var datetimeField = row.querySelector('input[type="datetime-local"]');
+    var datetimeLabel = row.querySelector('.datetime-field #datetime-label-' + checkbox.value);
     if (checkbox.checked) {
-      row.classList.add('selected');
       var now = new Date();
-      datetimeField.classList.remove('hidden');
-      datetimeField.value = formatDateToLocalISO(now);
+      datetimeLabel.textContent = formatDateToLocal(now);
+      datetimeLabel.style.backgroundColor = "#ffa500";
+      datetimeLabel.style.borderRadius = "5px";
+      datetimeLabel.style.padding = "5px 10px";
     } else {
-      row.classList.remove('selected');
-      datetimeField.classList.add('hidden');
-      datetimeField.value = '';
+      datetimeLabel.textContent = 'Vai jogar?';
+      datetimeLabel.style.backgroundColor = "transparent";
+      datetimeLabel.style.padding = "0";
     }
   }
 

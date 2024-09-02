@@ -49,9 +49,16 @@
     border-spacing: 0;
     border-radius: 12px;
     overflow: hidden;
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Aumenta a fonte das tabelas dos jogadores */
     table-layout: fixed;
     width: 100%;
+    cursor: pointer;
+  }
+
+  .table th {
+    cursor: pointer;
+    color: #00ff00;
+    font-size: 1.4rem; /* Aumenta a fonte dos cabeçalhos das tabelas */
   }
 
   .table-striped tbody tr:nth-of-type(odd) {
@@ -80,14 +87,60 @@
     color: #f5f5f5;
     transform: scale(1.05);
   }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .table-bordered th, .table-bordered td {
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    .btn-secondary {
+      font-size: 1rem;
+      padding: 8px 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+    }
+
+    .table-bordered th, .table-bordered td {
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+
+    .btn-secondary {
+      font-size: 0.9rem;
+      padding: 6px 12px;
+    }
+  }
 </style>
 
 <div class="container mt-5">
   <h1>Times Formados</h1>
 
-  <h2>Time A</h2>
+  <h2>Time A: <%= number_to_percentage(team_percentage(@balanced_teams[0]), precision: 0) %> de força</h2>
   <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" id="team-a-table">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0, 'team-a-table')">Jogadores</th>
+        </tr>
+      </thead>
       <tbody>
         <% @balanced_teams[0].sort_by(&:name).each do |player| %>
           <tr>
@@ -98,9 +151,14 @@
     </table>
   </div>
 
-  <h2>Time B</h2>
+  <h2>Time B: <%= number_to_percentage(team_percentage(@balanced_teams[1]), precision: 0) %> de força</h2>
   <div class="table-responsive">
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped" id="team-b-table">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0, 'team-b-table')">Jogadores</th>
+        </tr>
+      </thead>
       <tbody>
         <% @balanced_teams[1].sort_by(&:name).each do |player| %>
           <tr>
@@ -112,9 +170,14 @@
   </div>
 
   <% if @balanced_teams[2].any? %>
-    <h2>Próximo Time</h2>
+    <h2>Próximo Time: <%= number_to_percentage(team_percentage(@balanced_teams[2]), precision: 0) %> de força</h2>
     <div class="table-responsive">
-      <table class="table table-bordered table-striped">
+      <table class="table table-bordered table-striped" id="next-team-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0, 'next-team-table')">Jogadores</th>
+          </tr>
+        </thead>
         <tbody>
           <% @balanced_teams[2].sort_by(&:name).each do |player| %>
             <tr>
@@ -128,3 +191,27 @@
 
   <%= link_to 'Voltar', :back, class: 'btn btn-secondary mt-3' %>
 </div>
+
+<script>
+  function sortTable(columnIndex, tableId) {
+    const table = document.getElementById(tableId);
+    const rows = Array.from(table.rows).slice(1); 
+    let sortedRows = rows.sort((a, b) => {
+      const aText = a.cells[columnIndex].innerText.toLowerCase();
+      const bText = b.cells[columnIndex].innerText.toLowerCase();
+      
+      return aText.localeCompare(bText);
+    });
+
+    const isSorted = table.getAttribute('data-sorted') === 'true';
+
+    if (isSorted) {
+      sortedRows.reverse(); // Inverte a ordem se já estiver ordenado
+    }
+
+    table.setAttribute('data-sorted', !isSorted);
+
+    const tbody = table.querySelector('tbody');
+    sortedRows.forEach(row => tbody.appendChild(row));
+  }
+</script>
