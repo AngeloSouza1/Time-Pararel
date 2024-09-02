@@ -22,8 +22,7 @@
   h2 {
     margin-bottom: 15px;
     font-size: 2rem;
-    color: #007bff;
-    text-shadow: 0 0 10px #007bff, 0 0 20px #007bff;
+    color: #ffffff; /* Cor das labels dos times ajustada para branco */
   }
 
   .formation-table {
@@ -31,7 +30,9 @@
     background-color: #ffffff;
     margin: 20px 0;
     table-layout: fixed;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-radius: 12px; /* Bordas arredondadas para as tabelas */
+    overflow: hidden;
   }
 
   .formation-table th, .formation-table td {
@@ -45,8 +46,7 @@
   .formation-table th {
     font-weight: bold;
     font-size: 1.5rem;
-    color: #00ff00;
-    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    color: #ffffff;
   }
 
   .formation-table img {
@@ -115,7 +115,8 @@
 
 <div class="container mt-5">
   <h1>Times Formados</h1>
-
+  <hr>
+  
   <h2>Time A: <%= number_to_percentage(team_percentage(@balanced_teams[0]), precision: 0) %> de força</h2>
   <table class="formation-table">
     <% if @balanced_teams[0].size <= 12 %>
