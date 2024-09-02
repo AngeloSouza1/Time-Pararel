@@ -95,44 +95,53 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var formTeamsBtn = document.getElementById('form-teams-btn');
-    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    var confirmedPlayersCountElement = document.getElementById('confirmed-players-count');
+document.addEventListener('DOMContentLoaded', function() {
+  var formTeamsBtn = document.getElementById('form-teams-btn');
+  var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  var confirmedPlayersCountElement = document.getElementById('confirmed-players-count');
 
-    checkboxes.forEach(function(checkbox) {
-      checkbox.addEventListener('change', function() {
-        var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
+  function formatDateToLocalISO(date) {
+    // Ajusta o horário para o fuso local e formata para incluir segundos
+    var offset = date.getTimezoneOffset() * 60000;
+    var localISOTime = new Date(date - offset).toISOString().slice(0, 19); // Inclui segundos
+    return localISOTime;
+  }
 
-        // Atualizar a contagem de jogadores confirmados
-        confirmedPlayersCountElement.innerText = selectedPlayers;
+  function updateFormState() {
+    var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    confirmedPlayersCountElement.innerText = selectedPlayers;
+    formTeamsBtn.disabled = selectedPlayers < 12;
+  }
 
-        // Habilitar/desabilitar o botão de formar times
-        formTeamsBtn.disabled = selectedPlayers < 12;
+  function toggleRowState(checkbox) {
+    var row = checkbox.closest('.table-row');
+    row.classList.toggle('selected', checkbox.checked);
 
-        // Adiciona ou remove a classe 'selected' com base no estado do checkbox
-        var row = this.closest('.table-row');
-        row.classList.toggle('selected', this.checked);
+    var datetimeField = row.querySelector('input[type="datetime-local"]');
+    if (checkbox.checked) {
+      var now = new Date();
+      datetimeField.classList.remove('hidden');
+      datetimeField.value = formatDateToLocalISO(now); // Inclui segundos
+    } else {
+      datetimeField.classList.add('hidden');
+      datetimeField.value = '';
+    }
+  }
 
-        // Exibe ou oculta o campo de data/hora
-        var datetimeField = row.querySelector('input[type="datetime-local"]');
-        if (this.checked) {
-          datetimeField.classList.remove('hidden'); // Exibe o campo de data/hora
-          datetimeField.value = new Date().toISOString().slice(0, 16); // Define o valor atual
-        } else {
-          datetimeField.classList.add('hidden'); // Oculta o campo de data/hora
-          datetimeField.value = ''; // Limpa o valor ao desmarcar
-        }
-      });
-    });
-
-    // Adiciona evento de clique ao botão para verificar novamente antes do envio do formulário
-    formTeamsBtn.addEventListener('click', function() {
-      var selectedPlayers = document.querySelectorAll('input[type="checkbox"]:checked').length;
-      if (selectedPlayers < 12) {
-        alert('Selecione pelo menos 12 jogadores para formar times.');
-        return false; // Impede o envio do formulário
-      }
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      updateFormState();
+      toggleRowState(this);
     });
   });
+
+  formTeamsBtn.addEventListener('click', function() {
+    if (document.querySelectorAll('input[type="checkbox"]:checked').length < 12) {
+      alert('Selecione pelo menos 12 jogadores para formar times.');
+      return false;
+    }
+  });
+});
+
+
 </script>

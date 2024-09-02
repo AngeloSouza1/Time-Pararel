@@ -9,6 +9,10 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
 
+  # Configuração do tempo de busy_timeout (3 segundos)
+  variables:
+    busy_timeout: 3000
+
 development:
   <<: *default
   database: storage/development.sqlite3
