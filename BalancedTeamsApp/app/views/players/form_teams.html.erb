@@ -1,3 +1,4 @@
+<% images = (1..12).to_a.cycle %> <!-- Ciclo para repetir a lista de 1 a 12 -->
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
@@ -142,9 +143,12 @@
         </tr>
       </thead>
       <tbody>
-        <% @balanced_teams[0].sort_by(&:name).each do |player| %>
+        <% @balanced_teams[0].sort_by(&:name).each_with_index do |player, index| %>
           <tr>
-            <td><%= player.name %></td>
+            <td>
+              <img src="<%= asset_path("jog#{images.next}.png") %>" alt="Avatar de <%= player.name %>" style="height: 50px; margin-right: 10px; vertical-align: middle;">
+              <%= player.name %>
+            </td>
           </tr>
         <% end %>
       </tbody>
@@ -160,9 +164,12 @@
         </tr>
       </thead>
       <tbody>
-        <% @balanced_teams[1].sort_by(&:name).each do |player| %>
+        <% @balanced_teams[1].sort_by(&:name).each_with_index do |player, index| %>
           <tr>
-            <td><%= player.name %></td>
+            <td>
+              <img src="<%= asset_path("jog#{images.next}.png") %>" alt="Avatar de <%= player.name %>" style="height: 50px; margin-right: 10px; vertical-align: middle;">
+              <%= player.name %>
+            </td>
           </tr>
         <% end %>
       </tbody>
@@ -179,9 +186,12 @@
           </tr>
         </thead>
         <tbody>
-          <% @balanced_teams[2].sort_by(&:name).each do |player| %>
+          <% @balanced_teams[2].sort_by(&:name).each_with_index do |player, index| %>
             <tr>
-              <td><%= player.name %></td>
+              <td>
+                <img src="<%= asset_path("jog#{images.next}.png") %>" alt="Avatar de <%= player.name %>" style="height: 50px; margin-right: 10px; vertical-align: middle;">
+                <%= player.name %>
+              </td>
             </tr>
           <% end %>
         </tbody>
