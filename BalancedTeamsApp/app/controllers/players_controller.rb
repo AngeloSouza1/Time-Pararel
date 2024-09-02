@@ -12,7 +12,7 @@ class PlayersController < ApplicationController
     # Garante que player_times não seja nil e converte para DateTime, ignorando entradas vazias
     player_times = (params[:player_times] || {}).transform_values { |v| v.present? ? DateTime.parse(v) : nil }
 
-    # Balanceia os times considerando os 12 jogadores mais recentes
+    # Balanceia os times considerando os 12 jogadores mais recentes, com uma equipe adicional para os excedentes
     @balanced_teams = balance_teams(selected_players, player_times)
   end
 
@@ -24,6 +24,7 @@ class PlayersController < ApplicationController
 
     # Seleciona os 12 jogadores mais recentes
     top_players = sorted_players.first(12)
+    remaining_players = sorted_players.drop(12)
 
     # Ordena os jogadores selecionados por score (decrescente) para balanceamento
     top_players_sorted_by_score = top_players.sort_by(&:score).reverse
@@ -43,8 +44,11 @@ class PlayersController < ApplicationController
       end
     end
 
-    # Retorna os times balanceados
-    [team_a.shuffle, team_b.shuffle]
+    # Adiciona os jogadores restantes ao "Próximo time"
+    next_team = remaining_players.shuffle
+
+    # Retorna os times balanceados, incluindo o "Próximo time"
+    [team_a.shuffle, team_b.shuffle, next_team]
   end
 
   def initialize_players

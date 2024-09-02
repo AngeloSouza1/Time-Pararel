@@ -2,11 +2,49 @@
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
   body {
-    text-align: center;
     padding: 20px;
     background-color: #121212;
     color: #ffffff;
     font-family: 'Orbitron', sans-serif;
+    margin: 0;
+  }
+
+  header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .image-container {
+    width: 100%;
+    max-width: 1380px; /* Aumenta a largura máxima do app em 15% */
+    margin: 0 auto;
+  }
+
+  .image-container img {
+    width: 100%;
+    height: auto; /* Mantém a proporção */
+    max-height: 300px; /* Limita a altura da imagem */
+    object-fit: cover; /* Cobre a área da imagem sem deformação */
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+    transition: transform 0.3s ease;
+  }
+
+  .image-container img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+  }
+
+  .content-container {
+    background-color: #1f1f1f;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+    transition: box-shadow 0.3s ease;
+    max-width: 1380px; /* Aumenta a largura máxima do app em 15% */
+    margin: 0 auto;
   }
 
   h1 {
@@ -15,6 +53,7 @@
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
     animation: glow 1.5s infinite alternate;
+    text-align: center;
   }
 
   @keyframes glow {
@@ -27,19 +66,12 @@
   }
 
   .table-container {
-    margin: 0 auto;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
     border-radius: 12px;
-    background-color: #1f1f1f;
+    background-color: rgba(31, 31, 31, 0.9);
     padding: 15px;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
     max-width: 100%;
     overflow-x: auto;
-  }
-
-  .table-container:hover {
-    box-shadow: 0 0 40px rgba(0, 255, 0, 0.8);
-    transform: scale(1.02);
   }
 
   .table {
@@ -99,15 +131,15 @@
   .table tbody tr:hover {
     background-color: #0056b3;
     color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 86, 179, 0.3);
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(0, 86, 179, 0.7);
     cursor: pointer;
   }
 
   .table tbody tr.selected {
     background-color: #004d40 !important;
     color: #ffffff;
-    transform: scale(1.02);
+    transform: scale(1.05);
     box-shadow: 0 0 20px rgba(0, 77, 64, 0.7);
   }
 
@@ -123,12 +155,10 @@
     transition: color 0.3s ease;
   }
 
-  /* Aumentar a fonte do nome do jogador quando selecionado */
   .table tbody tr.selected .player-name {
     font-size: 1.5rem;
   }
 
-  /* Estilo personalizado para checkbox */
   .table input[type="checkbox"] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -228,8 +258,15 @@
     display: none;
   }
 
-  /* Media Queries para Responsividade */
   @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+    }
+
+    .content-container {
+      max-width: 100%;
+    }
+
     h1 {
       font-size: 2rem;
     }
@@ -278,19 +315,19 @@
       padding: 8px;
     }
   }
+
+
+  
 </style>
 
+<div class="content-container">
+  <h1 class="mb-4" style="text-align: center;">Futebol - Quarta</h1>
+  <h4 style="text-align: center;">Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</h4>
+  <h4 style="text-align: center;">Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</h4>
+  <h4 style="text-align: center;"><strong><span id="confirmed-players-count">0</span></strong>  jogador(es) confirmado(s).</h4>
 
 
-
-<div class="container mt-5">
-  <h1 class="mb-4">Futebol - Quarta</h1>
-
-  <p>Selecione os jogadores desejados. Após selecionar, clique em "Formar Times".</p>
-  <p>Selecione <strong>pelo menos 12 jogadores</strong> para formar times.</p>
-  <p><strong><span id="confirmed-players-count">0</span></strong> jogador(es) confirmado(s).</p>
-
-  <%= form_tag form_teams_players_path, method: :post do %>
+<%= form_tag form_teams_players_path, method: :post do %>
     <div class="mb-3">
       <div class="d-grid gap-2">
         <button type="submit" class="btn btn-lg btn-primary" id="form-teams-btn" disabled>Formar Times</button>
@@ -328,9 +365,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var confirmedPlayersCountElement = document.getElementById('confirmed-players-count');
 
   function formatDateToLocalISO(date) {
-    // Ajusta o horário para o fuso local e formata para incluir segundos
     var offset = date.getTimezoneOffset() * 60000;
-    var localISOTime = new Date(date - offset).toISOString().slice(0, 19); // Inclui segundos
+    var localISOTime = new Date(date - offset).toISOString().slice(0, 19);
     return localISOTime;
   }
 
@@ -349,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
       row.classList.add('selected');
       var now = new Date();
       datetimeField.classList.remove('hidden');
-      datetimeField.value = formatDateToLocalISO(now); // Inclui segundos
+      datetimeField.value = formatDateToLocalISO(now);
     } else {
       row.classList.remove('selected');
       datetimeField.classList.add('hidden');

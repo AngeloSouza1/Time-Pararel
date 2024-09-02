@@ -1,14 +1,21 @@
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
   body {
     text-align: center;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
   }
 
   h1 {
     margin-bottom: 20px;
-    font-size: 2.5rem;
-    color: #343a40;
+    font-size: 3rem;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    animation: glow 1.5s infinite alternate;
   }
 
   h2 {
@@ -17,63 +24,107 @@
     color: #007bff;
   }
 
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+    }
+    to {
+      text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00, 0 0 40px #00ff00;
+    }
+  }
+
+  .table-responsive {
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+    border-radius: 12px;
+    background-color: rgba(31, 31, 31, 0.9);
+    padding: 15px;
+    max-width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+  }
+
   .table {
-    background-color: white;
+    background-color: #ffffff;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 1.2rem;
+    table-layout: fixed;
+    width: 100%;
   }
 
   .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f2f2f2;
+    background-color: #e0e0e0;
   }
 
   .table-bordered th, .table-bordered td {
-    border: 2px solid #dee2e6;
-  }
-
-  .table td {
-    font-size: 1.2rem;
+    border: 2px solid #007bff;
+    padding: 20px;
+    text-align: center;
+    color: #000000;
   }
 
   .btn-secondary {
-    background-color: #6c757d;
-    color: white;
+    background-color: #00ff00;
+    color: #121212;
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     border-radius: 5px;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
   }
 
   .btn-secondary:hover {
-    background-color: #5a6268;
+    background-color: #00cc00;
+    color: #f5f5f5;
+    transform: scale(1.05);
   }
 </style>
 
 <div class="container mt-5">
-  <h1 class="text-center">Times Formados</h1>
+  <h1>Times Formados</h1>
 
-  <h2>Time A: <%= number_to_percentage(team_percentage(@balanced_teams[0]), precision: 0) %></h2>
+  <h2>Time A</h2>
   <div class="table-responsive">
-    <table class="table table-bordered table-striped text-center">
+    <table class="table table-bordered table-striped">
       <tbody>
         <% @balanced_teams[0].sort_by(&:name).each do |player| %>
           <tr>
-            <td><%= "#{player.name} (#{player.score})" %></td>
+            <td><%= player.name %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
 
-  <h2>Time B: <%= number_to_percentage(team_percentage(@balanced_teams[1]), precision: 0) %></h2>
+  <h2>Time B</h2>
   <div class="table-responsive">
-    <table class="table table-bordered table-striped text-center">
+    <table class="table table-bordered table-striped">
       <tbody>
         <% @balanced_teams[1].sort_by(&:name).each do |player| %>
           <tr>
-            <td><%= "#{player.name} (#{player.score})" %></td>
+            <td><%= player.name %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
+
+  <% if @balanced_teams[2].any? %>
+    <h2>Próximo Time</h2>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <tbody>
+          <% @balanced_teams[2].sort_by(&:name).each do |player| %>
+            <tr>
+              <td><%= player.name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
 
   <%= link_to 'Voltar', :back, class: 'btn btn-secondary mt-3' %>
 </div>
