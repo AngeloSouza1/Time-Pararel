@@ -6,14 +6,25 @@ class PlayersController < ApplicationController
   end
 
   def form_teams
-    # Encontra os jogadores selecionados com base nos IDs passados pelo formulário
-    selected_players = Player.find(params[:player_ids])
+    begin
+      # Filtra apenas IDs válidos e converte em array de inteiros
+      player_ids = params[:player_ids].map(&:to_i)
 
-    # Garante que player_times não seja nil e converte para DateTime, ignorando entradas vazias
-    player_times = (params[:player_times] || {}).transform_values { |v| v.present? ? DateTime.parse(v) : nil }
+      # Encontra os jogadores selecionados com base nos IDs passados pelo formulário
+      selected_players = Player.where(id: player_ids)
 
-    # Balanceia os times considerando os 12 jogadores mais recentes, com uma equipe adicional para os excedentes
-    @balanced_teams = balance_teams(selected_players, player_times)
+      # Garante que player_times não seja nil e converte para DateTime, ignorando entradas vazias
+      player_times = (params[:player_times] || {}).transform_values do |v|
+        v.present? ? DateTime.parse(v) : nil
+      end
+
+      # Balanceia os times considerando os 12 jogadores mais recentes, com uma equipe adicional para os excedentes
+      @balanced_teams = balance_teams(selected_players, player_times)
+    rescue ActiveRecord::RecordNotFound => e
+      # Caso algum jogador não seja encontrado, exibe uma mensagem ou redireciona para outra ação
+      flash[:error] = "Alguns jogadores selecionados não foram encontrados."
+      redirect_to players_path
+    end
   end
 
   private
