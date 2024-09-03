@@ -61,13 +61,13 @@ Para executar a aplicação localmente em seu ambiente de desenvolvimento, siga 
 
 🔹 Clone o repositório:
   ```bash
-git clone https://github.com/SeuUsuario/BalancedTeams.git
+git clone https://github.com/AngeloSouza1/Time-Pararel.git
 
 ```
 🔹 Abra o diretório do projeto
 
 ```bash
-cd BalancedTeams
+cd Time-Pararel
 
 ```
 🔹 Instale as dependências do projeto utilizando o Bundler:
