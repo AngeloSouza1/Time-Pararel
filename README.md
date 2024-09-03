@@ -7,7 +7,7 @@
 ### 💻 Sobre o projeto
 ---
 
-<div align="justify"> O principal objetivo do Balanced Teams é proporcionar uma maneira prática e eficiente de organizar partidas de futebol, balanceando os times de acordo com a força dos jogadores. A aplicação distribui os jogadores em dois times principais e cria um terceiro time para jogadores excedentes, quando necessário.
+<div align="justify"> O principal objetivo da aplicação é proporcionar uma maneira prática e eficiente de organizar partidas de futebol, balanceando os times de acordo com a força dos jogadores. A aplicação distribui os jogadores em dois times principais e cria um terceiro time para jogadores excedentes, quando necessário.
 
  #### 👁️‍🗨️ Funcionalidades Principais
 
